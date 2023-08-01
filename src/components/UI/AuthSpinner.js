@@ -1,5 +1,5 @@
-const Spinner = () => (
-  <div className="custom-spinner w-100 vh-100 d-flex justify-content-center align-items-center">
+const AuthSpinner = () => (
+  <div className="auth-spinner vw-100 vh-100 d-flex justify-content-center align-items-center">
     <div className="w-50 h-50 d-flex justify-content-center align-items-center shadow p-3  bg-body rounded">
       <div
         className="spinner-border text-orange"
@@ -15,4 +15,4 @@ const Spinner = () => (
   </div>
 );
 
-export default Spinner;
+export default AuthSpinner;
