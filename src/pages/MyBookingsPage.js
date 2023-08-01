@@ -1,31 +1,31 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchBookings } from '../redux/bookings/bookingsSlice';
+import { fetchMyBookings } from '../redux/my-bookings/my-bookings';
 
 import BookingItem from '../components/BookingItem/BookingItem';
-import Spinner from '../components/UI/Spinner';
 
-const BookingPage = () => {
-  const bookings = useSelector((state) => state.bookings);
+const MyBookingsPage = () => {
+  const myBookings = useSelector((state) => state.myBookings);
   const token = useSelector((state) => state.auth.token);
-  const { loading, hasError } = useSelector((state) => state.ui);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchBookings({ token }));
+    dispatch(fetchMyBookings({ token }));
   }, [dispatch, token]);
 
-  let bookingsContent;
+  let myBookingsContent;
 
-  if (loading) {
-    return <Spinner />;
-  }
-
-  if (bookings.bookings.length > 0) {
-    bookingsContent = (
+  if (myBookings.error) {
+    myBookingsContent = (
+      <p className="shadow text-danger p-3 text-center">{myBookings.error}</p>
+    );
+  } else if (myBookings.loading) {
+    myBookingsContent = <p className="p-5 text-center">Loading ...</p>;
+  } else if (myBookings.myBookings.length > 0) {
+    myBookingsContent = (
       <ul className="row py-5 list-unstyled gy-4 gx-4">
-        {bookings.bookings.map((item) => (
+        {myBookings.myBookings.map((item) => (
           <BookingItem
             key={item.id}
             id={item.id}
@@ -37,8 +37,8 @@ const BookingPage = () => {
         ))}
       </ul>
     );
-  } else if (!hasError && bookings.length <= 0) {
-    bookingsContent = (
+  } else {
+    myBookingsContent = (
       <p className="text-center text-danger">
         {' '}
         No Bookings found! Please add a new one
@@ -49,9 +49,9 @@ const BookingPage = () => {
   return (
     <section className="p-5">
       <h2 className="text-center">My Bookings</h2>
-      <div className="container">{bookingsContent}</div>
+      <div className="container">{myBookingsContent}</div>
     </section>
   );
 };
 
-export default BookingPage;
+export default MyBookingsPage;

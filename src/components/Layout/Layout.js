@@ -14,32 +14,25 @@ import {
   FaUserAltSlash,
 } from 'react-icons/fa';
 import links from './navData';
-import logoImage from '../../images/logo.png';
-import logo from '../../images/logo2.png';
+import logoImage from '../../images/logo.jpeg';
 import { fetchLogout } from '../../redux/auth/authSlice';
-import PopupMessage from '../UI/PopupMessage';
 
 const Layout = ({ children }) => {
   const [showNav, setShowNav] = useState(false);
 
-  const ui = useSelector((state) => state.ui);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-  const toggleNavbar = () => {
+  const showNavbar = () => {
     setShowNav((preState) => !preState);
-  };
-
-  const closeNavbar = () => {
-    setShowNav(false);
   };
 
   const navClasses = showNav
     ? 'col-md-3 col-lg-3 shadow vh-100 navigation show'
-    : 'col-md-3 col-lg-3 shadow vh-100 navigation hide-sm-nav';
+    : 'col-md-3 col-lg-3 shadow vh-100 navigation';
   const mainClasses = showNav
-    ? 'col-md-9 col-lg-9 full-screen show-header-logo'
-    : 'col-md-9 col-lg-9 offset-md-3 offset-lg-3';
+    ? 'col-md-9 col-lg-9 full-screen'
+    : 'col-md-9 col-lg-9';
 
   return (
     <div className="row gx-0">
@@ -47,11 +40,11 @@ const Layout = ({ children }) => {
         <button
           type="button"
           className="nav-btn nav-close-btn btn btn-outline-dark px-2 py-1"
-          onClick={toggleNavbar}
+          onClick={showNavbar}
         >
           <FaTimes />
         </button>
-        <div className="nav-logo p-3">
+        <div className="logo-image p-3">
           <Link to="/">
             <img src={logoImage} alt="" />
           </Link>
@@ -59,7 +52,7 @@ const Layout = ({ children }) => {
         <ul>
           {links.map((link) => (
             <li key={link.id} className="link">
-              <NavLink to={link.path} onClick={closeNavbar}>
+              <NavLink to={link.path}>
                 <span>{link.title}</span>
               </NavLink>
             </li>
@@ -67,12 +60,12 @@ const Layout = ({ children }) => {
           {auth.role === 'admin' && (
             <>
               <li className="link">
-                <NavLink to="/add_resort" onClick={closeNavbar}>
+                <NavLink to="/add_resort">
                   <span>Add Resort</span>
                 </NavLink>
               </li>
               <li className="link">
-                <NavLink to="/delete-resort" onClick={closeNavbar}>
+                <NavLink to="/delete-resort">
                   <span>Delete Resort</span>
                 </NavLink>
               </li>
@@ -112,31 +105,26 @@ const Layout = ({ children }) => {
         </p>
       </nav>
       <main className={mainClasses}>
-        <header className="bg-success text-light px-3 py-3 header">
+        <header className="bg-success text-light px-5 py-3">
           <div className="icons d-flex justify-content-between">
             <button
               type="button"
-              className="btn btn-outline-light btn-icon"
-              onClick={toggleNavbar}
+              className="btn btn-outline-light"
+              onClick={showNavbar}
             >
               <FaBars />
             </button>
-            <div className="logo-image me-auto">
-              <Link to="/">
-                <img src={logo} alt="" />
-              </Link>
-            </div>
             {!auth.userId ? (
-              <Link
-                to="/login"
-                className="btn bg-orange text-light d-block border btn-icon"
+              <a
+                href="/login"
+                className="btn bg-orange text-light d-block border"
               >
                 <FaUserCircle />
-              </Link>
+              </a>
             ) : (
               <button
                 type="button"
-                className="btn bg-orange text-light border btn-icon"
+                className="btn bg-orange text-light border"
                 onClick={() => dispatch(fetchLogout({ token: auth.token }))}
               >
                 <FaUserAltSlash />
@@ -144,14 +132,7 @@ const Layout = ({ children }) => {
             )}
           </div>
         </header>
-        <div className="main-content">
-          {ui.message && !ui.loading && (
-          <div className="m-1">
-            <PopupMessage />
-          </div>
-          )}
-          {children}
-        </div>
+        <div className="main-content">{children}</div>
       </main>
     </div>
   );
